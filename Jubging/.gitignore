@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+lib
 
 ### STS ###
 .apt_generated
@@ -35,3 +36,15 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### mac OS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### Project security ###
+**/resources/
+Dockerfile
+docker-compose.yaml
+deploy_*.sh
+app-*.yaml
