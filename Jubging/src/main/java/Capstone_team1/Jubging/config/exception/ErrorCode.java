@@ -8,6 +8,8 @@ public enum ErrorCode {
      * 400 Bad Request
      */
     NEED_SIGN_IN(4000),
+    INVALID_HTTP_METHOD(4001),
+    INVALID_INPUT_VALUE(4002),
 
     /**
      * 401 Unauthorized
@@ -33,6 +35,8 @@ public enum ErrorCode {
      * 409 CONFLICT
      */
     CONFLICT(4090),
+    DELETE_FAIL(4091),
+    UPDATE_FAIL(4092),
     /**
      * 500 Internal Server Error
      */

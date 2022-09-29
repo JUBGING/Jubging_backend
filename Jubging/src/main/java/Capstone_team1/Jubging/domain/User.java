@@ -140,4 +140,20 @@ public class User extends BaseTimeEntity{
                 userDomainModel.getState()
         );
     }
+
+    public User update(String name, String password, String profileImageUrl, Role role, UserState userState) {
+        this.name = name;
+        this.password = password;
+        this.profileImageUrl = profileImageUrl;
+        this.role = role;
+        this.state = userState;
+
+        return this;
+    }
+
+    public String updatePassword(String newPassword)
+    {
+        this.password = newPassword;
+        return newPassword;
+    }
 }

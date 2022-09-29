@@ -1,9 +1,10 @@
 package Capstone_team1.Jubging.dto.jwt;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor

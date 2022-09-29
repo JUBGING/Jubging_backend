@@ -6,7 +6,7 @@ import Capstone_team1.Jubging.config.exception.UnauthorizedException;
 import Capstone_team1.Jubging.config.utils.SecurityUtil;
 import Capstone_team1.Jubging.domain.User;
 import Capstone_team1.Jubging.domain.model.UserState;
-import Capstone_team1.Jubging.repository.UserRepository;
+import Capstone_team1.Jubging.repository.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
-    private final UserRepository userRepository;
+    private final JpaUserRepository userRepository;
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         //필요한 권한이 없이 접근하려 할때 403
