@@ -9,9 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,9 +18,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -155,5 +149,16 @@ public class User extends BaseTimeEntity{
     {
         this.password = newPassword;
         return newPassword;
+    }
+
+    public static User createUser(String email, String password, String name, Role role, UserState userState){
+        User user = new User();
+        user.email = email;
+        user.password = password;
+        user.name = name;
+        user.role = role;
+        user.state = userState;
+
+        return user;
     }
 }

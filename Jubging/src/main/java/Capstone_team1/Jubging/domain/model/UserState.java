@@ -10,7 +10,8 @@ import java.util.Arrays;
 public enum UserState {
     ACTIVE("ACTIVE"),
     INACTIVE("INACTIVE"),
-    REJECT("REJECT");
+    REJECT("REJECT"),
+    LEAVE("LEAVE");
 
     private final String value;
 

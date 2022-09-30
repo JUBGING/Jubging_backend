@@ -28,9 +28,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             return;
         }
 
-        // API Access with JWT token includes user data whose role is NONE or state is not ACTIVE
-        if (errorCode == ErrorCode.NEED_SIGN_IN) {
-            this.setResponse(response, ErrorCode.NEED_SIGN_IN, "다시 로그인 해주세요. 문제 반복시 관리자에게 문의해주세요.");
+        if(errorCode == ErrorCode.INVALID_REFRESH_JWT){
+            this.setResponse(response, ErrorCode.INVALID_REFRESH_JWT, "재발급 토큰이 틀렸습니다.");
         }
     }
 

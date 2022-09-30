@@ -10,6 +10,8 @@ public enum ErrorCode {
     NEED_SIGN_IN(4000),
     INVALID_HTTP_METHOD(4001),
     INVALID_INPUT_VALUE(4002),
+    DUPLICATE_EMAIL(4003),
+    INCORRECT_STATUS(4004),
 
     /**
      * 401 Unauthorized
@@ -21,6 +23,8 @@ public enum ErrorCode {
     INVALID_REQUEST_USER_STATE(4014),
 
     INVALID_SIGNIN(4015),
+    INVALID_REFRESH_JWT(4016),
+    LEAVE_USER(4017),
     /**
      * 403 Forbidden
      */

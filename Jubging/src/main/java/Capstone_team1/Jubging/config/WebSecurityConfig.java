@@ -5,45 +5,41 @@ import Capstone_team1.Jubging.config.jwt.JwtAuthenticationEntryPoint;
 import Capstone_team1.Jubging.config.jwt.JwtSecurityConfig;
 import Capstone_team1.Jubging.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+public class WebSecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
+    private final RedisTemplate<String, Object> redisTemplate;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring()
-                .antMatchers(
-                        "/h2-console/**"
-                        , "/favicon.ico"
-                        , "/error"
-                );
-    }
-
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
+    @Bean
+    @Order(SecurityProperties.BASIC_AUTH_ORDER)
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception
+    {
         httpSecurity
                 .httpBasic().disable()
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
@@ -79,18 +75,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(
-                        "/members/sign-in",
-                        "/members/sign-up",
-                        "/members/logout",
-                        "/members/reissue",
-                        "/").permitAll()
-                .antMatchers(HttpMethod.POST, "/members/password").permitAll()
-                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers("/members/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                "/api/**/auth/sign-in",
+                        "/api/**/auth/sign-up",
+                        "/api/**/auth/reissue").permitAll()
+                .antMatchers("/api/**/admin/**").hasAuthority("ROLE_USER")
+                .antMatchers("/api/**/members/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(new JwtSecurityConfig(jwtTokenProvider)); // JwtSecurityConfig 적용;
+                .apply(new JwtSecurityConfig(jwtTokenProvider, redisTemplate)); // JwtSecurityConfig 적용;
+        return httpSecurity.build();
+    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers(
+                "/h2-console/**"
+                , "/favicon.ico"
+                , "/error");
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

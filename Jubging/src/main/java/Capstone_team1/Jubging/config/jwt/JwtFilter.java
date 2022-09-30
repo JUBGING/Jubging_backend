@@ -3,8 +3,10 @@ package Capstone_team1.Jubging.config.jwt;
 import Capstone_team1.Jubging.config.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,6 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
     public static final String BEARER_PREFIX = "Bearer ";
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final RedisTemplate<String, Object> redisTemplate;
     // 실제 필터링 로직은 doFilterInternal 에 들어감
     // JWT 토큰의 인증 정보를 현재 쓰레드의 SecurityContext 에 저장하는 역할 수행
     @Override
@@ -41,8 +44,14 @@ public class JwtFilter extends OncePerRequestFilter {
         if(jwt != null) {
             if (StringUtils.hasText(jwt)) {
                 if (jwtTokenProvider.validateToken(jwt)) {
+                    // (추가) Redis 에 해당 accessToken logout 여부 확인
+                    String isLogout = (String) redisTemplate.opsForValue().get(jwt);
+                    log.info("isLogout  = {}", isLogout);
+
+                    if (ObjectUtils.isEmpty(isLogout)) {
                         Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
                 else{
                     request.setAttribute("exception", ErrorCode.INVALID_ACCESS_JWT);

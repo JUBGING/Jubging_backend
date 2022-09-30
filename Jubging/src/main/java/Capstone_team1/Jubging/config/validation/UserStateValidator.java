@@ -32,5 +32,12 @@ public class UserStateValidator extends AbstractValidator {
                     "거부된 사용자 입니다."
             );
         }
+        if(this.userState == UserState.LEAVE)
+        {
+            throw new UnauthorizedException(
+                    ErrorCode.LEAVE_USER,
+                    "회원탈퇴한 사용자 입니다."
+            );
+        }
     }
 }
