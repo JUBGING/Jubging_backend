@@ -46,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (jwtTokenProvider.validateToken(jwt)) {
                     // (추가) Redis 에 해당 accessToken logout 여부 확인
                     String isLogout = (String) redisTemplate.opsForValue().get(jwt);
-                    log.info("isLogout  = {}", isLogout);
+                    log.info("isLogout   = {}", isLogout);
 
                     if (ObjectUtils.isEmpty(isLogout)) {
                         Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
@@ -65,6 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
     // Request Header 에서 토큰 정보를 꺼내오기
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        System.out.println(request.getHeader("Authorization"));
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }

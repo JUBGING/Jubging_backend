@@ -1,6 +1,9 @@
 package Capstone_team1.Jubging.domain;
 
 import Capstone_team1.Jubging.domain.BaseTimeEntity;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CollectionId;
 
 import javax.persistence.Column;
@@ -12,6 +15,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Jubjubi")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Jubjubi extends BaseTimeEntity {
     @Id
     @Column(name = "jubjubi_id", nullable = false)
@@ -36,7 +41,7 @@ public class Jubjubi extends BaseTimeEntity {
     @Column(name = "lng", nullable = false)
     private float lng;
 
-    @Column(name = "status", nullable = false, columnDefinition = "varchar(10) default ACTIVE")
+    @Column(name = "status", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private String status;
 
 }
