@@ -10,6 +10,8 @@ import Capstone_team1.Jubging.dto.jwt.JwtTokenRequestLogoutDto;
 import Capstone_team1.Jubging.dto.jwt.JwtTokenRequestReissueDto;
 import Capstone_team1.Jubging.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,10 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @PostMapping("/sign-in")
     @ResponseStatus(value = HttpStatus.OK)
     public JwtTokenDto signIn(@RequestBody @Validated UserSignInRequestDto userSignInRequestDto) {
+
         return this.authService.signIn(userSignInRequestDto);
     }
 

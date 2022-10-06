@@ -1,5 +1,8 @@
 package Capstone_team1.Jubging.domain;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "jubjubi")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Jubjubi extends BaseTimeEntity {
     @Id
     @Column(name = "jubjubi_id", nullable = false)
