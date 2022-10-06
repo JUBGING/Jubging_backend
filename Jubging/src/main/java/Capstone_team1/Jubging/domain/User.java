@@ -15,9 +15,15 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -51,13 +57,21 @@ public class User extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     private UserState state;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "point_id", nullable = false)
+    private Points points;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<JubgingData> jubgingDataList = new ArrayList<JubgingData>();
+
     private User(
             String email,
             String name,
             String password,
             String profileImageUrl,
             Role role,
-            UserState state
+            UserState state,
+            Points points
     ) {
         this.email = email;
         this.name = name;
@@ -65,6 +79,7 @@ public class User extends BaseTimeEntity{
         this.profileImageUrl = profileImageUrl;
         this.role = role;
         this.state = state;
+        this.points = points;
     }
 
     private User(
@@ -74,7 +89,8 @@ public class User extends BaseTimeEntity{
             String password,
             String profileImageUrl,
             Role role,
-            UserState state
+            UserState state,
+            Points points
     ) {
         this.id = id;
         this.email = email;
@@ -83,6 +99,7 @@ public class User extends BaseTimeEntity{
         this.profileImageUrl = profileImageUrl;
         this.role = role;
         this.state = state;
+        this.points = points;
     }
 
     public static User of(
@@ -91,7 +108,8 @@ public class User extends BaseTimeEntity{
             String password,
             String profileImageUrl,
             Role role,
-            UserState state
+            UserState state,
+            Points points
     ) {
         return new User(
                 email,
@@ -99,7 +117,8 @@ public class User extends BaseTimeEntity{
                 password,
                 profileImageUrl,
                 role,
-                state
+                state,
+                points
         );
     }
 
@@ -110,7 +129,8 @@ public class User extends BaseTimeEntity{
             String password,
             String profileImageUrl,
             Role role,
-            UserState state
+            UserState state,
+            Points points
     ) {
         return new User(
                 id,
@@ -119,7 +139,8 @@ public class User extends BaseTimeEntity{
                 password,
                 profileImageUrl,
                 role,
-                state
+                state,
+                points
         );
     }
 
@@ -131,17 +152,18 @@ public class User extends BaseTimeEntity{
                 userDomainModel.getPassword(),
                 userDomainModel.getProfileImageUrl(),
                 userDomainModel.getRole(),
-                userDomainModel.getState()
+                userDomainModel.getState(),
+                userDomainModel.getPoints()
         );
     }
 
-    public User update(String name, String password, String profileImageUrl, Role role, UserState userState) {
+    public User update(String name, String password, String profileImageUrl, Role role, UserState userState, Points points) {
         this.name = name;
         this.password = password;
         this.profileImageUrl = profileImageUrl;
         this.role = role;
         this.state = userState;
-
+        this.points = points;
         return this;
     }
 
@@ -151,13 +173,14 @@ public class User extends BaseTimeEntity{
         return newPassword;
     }
 
-    public static User createUser(String email, String password, String name, Role role, UserState userState){
+    public static User createUser(String email, String password, String name, Role role, UserState userState, Points points){
         User user = new User();
         user.email = email;
         user.password = password;
         user.name = name;
         user.role = role;
         user.state = userState;
+        user.points = points;
 
         return user;
     }

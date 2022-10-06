@@ -1,5 +1,6 @@
 package Capstone_team1.Jubging.domain.model;
 
+import Capstone_team1.Jubging.domain.Points;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +31,8 @@ public class UserDomainModel {
     @NotNull(message = "사용자 상태가 입력되지 않았습니다.")
     private UserState state;
 
+    private Points points;
+
     private UserDomainModel(
             String id,
             String email,
@@ -37,7 +40,8 @@ public class UserDomainModel {
             String password,
             String profileImageUrl,
             Role role,
-            UserState state
+            UserState state,
+            Points points
     ) {
         this.id = id;
         this.email = email;
@@ -46,6 +50,7 @@ public class UserDomainModel {
         this.profileImageUrl = profileImageUrl;
         this.role = role;
         this.state = state;
+        this.points = points;
     }
 
     public static UserDomainModel of(
@@ -55,7 +60,8 @@ public class UserDomainModel {
             String password,
             String profileImageUrl,
             Role role,
-            UserState state
+            UserState state,
+            Points points
     ) {
         return new UserDomainModel(
                 id,
@@ -64,7 +70,8 @@ public class UserDomainModel {
                 password,
                 profileImageUrl,
                 role,
-                state
+                state,
+                points
         );
     }
 

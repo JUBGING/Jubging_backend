@@ -11,6 +11,7 @@ import Capstone_team1.Jubging.config.validation.EnumTypeCorrectValidator;
 import Capstone_team1.Jubging.config.validation.PasswordCorrectValidator;
 import Capstone_team1.Jubging.config.validation.UserStateValidator;
 import Capstone_team1.Jubging.config.validation.ValidatorBucket;
+import Capstone_team1.Jubging.domain.Points;
 import Capstone_team1.Jubging.domain.User;
 import Capstone_team1.Jubging.domain.model.Role;
 import Capstone_team1.Jubging.domain.model.UserState;
@@ -22,8 +23,10 @@ import Capstone_team1.Jubging.dto.auth.UserStatusChangeRequestDto;
 import Capstone_team1.Jubging.dto.jwt.JwtTokenDto;
 import Capstone_team1.Jubging.dto.jwt.JwtTokenRequestLogoutDto;
 import Capstone_team1.Jubging.dto.jwt.JwtTokenRequestReissueDto;
+import Capstone_team1.Jubging.repository.PointsRepository;
 import Capstone_team1.Jubging.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -38,8 +41,10 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
+    private final PointsRepository pointsRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -103,12 +108,14 @@ public class AuthServiceImpl implements AuthService{
                     );
                 }
         );
+        Points points = pointsRepository.create(Points.createPoints(0, 0));
         User newUser = User.createUser(
                 userRequestSignUpDto.getEmail(),
                 passwordEncoder.encode(userRequestSignUpDto.getPassword()),
                 userRequestSignUpDto.getName(),
                 Role.USER,
-                UserState.ACTIVE
+                UserState.ACTIVE,
+                points
         );
 
         return UserResponseDto.of(this.userRepository.create(newUser));
@@ -211,7 +218,8 @@ public class AuthServiceImpl implements AuthService{
                 findUser.getPassword(),
                 findUser.getProfileImageUrl(),
                 findUser.getRole(),
-                UserState.valueOf(userStatusChangeRequestDto.getStatus())
+                UserState.valueOf(userStatusChangeRequestDto.getStatus()),
+                findUser.getPoints()
         );
 
         this.userRepository.update(findUser)

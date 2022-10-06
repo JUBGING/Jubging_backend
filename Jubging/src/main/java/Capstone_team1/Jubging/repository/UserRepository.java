@@ -3,6 +3,8 @@ package Capstone_team1.Jubging.repository;
 import Capstone_team1.Jubging.config.exception.ConflictException;
 import Capstone_team1.Jubging.config.exception.ErrorCode;
 import Capstone_team1.Jubging.domain.User;
+import Capstone_team1.Jubging.dto.user.FindUserInfoDto;
+import Capstone_team1.Jubging.dto.user.UserMyInfoUpdateResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +48,9 @@ public class UserRepository {
                             updateUser.getPassword(),
                             updateUser.getProfileImageUrl(),
                             updateUser.getRole(),
-                            updateUser.getState());
+                            updateUser.getState(),
+                            updateUser.getPoints()
+                    );
                     return this.jpaUserRepository.save(srcUser);
                 }
         );
@@ -59,5 +63,10 @@ public class UserRepository {
         catch (Exception e){
             throw new ConflictException(ErrorCode.DELETE_FAIL, "회원 탈퇴를 실패하셨습니다");
         }
+    }
+
+    public Optional<FindUserInfoDto> findUserInfo(String email)
+    {
+        return this.jpaUserRepository.findUserInfo(email);
     }
 }
