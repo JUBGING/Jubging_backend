@@ -62,7 +62,11 @@ public class User extends BaseTimeEntity{
     private Points points;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<JubgingData> jubgingDataList = new ArrayList<JubgingData>();
+    private final List<JubgingData> jubgingDataList = new ArrayList<JubgingData>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private final List<Order> orderList = new ArrayList<Order>();
+
 
     private User(
             String email,

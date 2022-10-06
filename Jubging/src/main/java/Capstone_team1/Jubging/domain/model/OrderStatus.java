@@ -7,15 +7,15 @@ import lombok.Getter;
 import java.util.Arrays;
 
 @Getter
-public enum UserState {
-    ACTIVE("ACTIVE"),
-    INACTIVE("INACTIVE"),
-    REJECT("REJECT"),
-    LEAVE("LEAVE");
+public enum OrderStatus {
+
+    READY("READY"),
+    SHIPPING("SHIPPING"),
+    COMPLETE("COMPLETE");
 
     private final String value;
 
-    UserState(String value) {
+    OrderStatus(String value) {
         this.value = value;
     }
 }

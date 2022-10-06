@@ -9,6 +9,7 @@ import Capstone_team1.Jubging.dto.user.FindUserInfoDto;
 import Capstone_team1.Jubging.dto.user.UserJubgingDataResponseDto;
 import Capstone_team1.Jubging.dto.user.UserMyInfoUpdateRequestDto;
 import Capstone_team1.Jubging.dto.user.UserMyInfoUpdateResponseDto;
+import Capstone_team1.Jubging.dto.user.UserPurchaseDetailsResponseDto;
 import Capstone_team1.Jubging.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,12 +48,17 @@ public class UserService {
                 .orElseThrow(()-> new ConflictException(ErrorCode.UPDATE_FAIL, "현재 사용자 정보 업데이트를 실패했습니다."));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<UserJubgingDataResponseDto> getJubgingData(){
 
         User findUser = this.userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
 
         return findUser.getJubgingDataList().stream().map(UserJubgingDataResponseDto::of).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserPurchaseDetailsResponseDto> getPurchaseDetails(){
+       return this.userRepository.findOrderInfo(SecurityUtil.getCurrentUserEmail());
     }
 }
