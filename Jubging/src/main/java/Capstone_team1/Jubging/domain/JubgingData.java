@@ -30,7 +30,7 @@ public class JubgingData extends BaseTimeEntity{
     private Integer stepCnt;
 
     @Column(name = "distance")
-    private Integer distance;
+    private Float distance;
 
     @Column(name = "time")
     private Time time;
@@ -45,5 +45,33 @@ public class JubgingData extends BaseTimeEntity{
     private String imgUrl;
 
     @ManyToOne
+    @JoinColumn(name="user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name="tongs_id")
+    private Tong tong;
+
+    @Column(name = "tongs_return")
+    private Boolean tongs_return;
+
+    public static JubgingData create(User user, Tong tong){
+        JubgingData jubgingData = new JubgingData();
+        jubgingData.setUser(user);
+        jubgingData.setTong(tong);
+        return jubgingData;
+    }
+
+    public JubgingData update(int stepCnt, float distance, int calorie, String imgUrl, User user, Tong tong, boolean tongs_return){
+        this.stepCnt = stepCnt;
+        this.distance = distance;
+        this.calorie = calorie;
+        this.imgUrl = imgUrl;
+        this.user = user;
+        this.tong = tong;
+        this.tongs_return = tongs_return;
+        return this;
+    }
+
+
 }

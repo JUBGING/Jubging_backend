@@ -38,8 +38,8 @@ public class UserController {
     @ResponseStatus(value = HttpStatus.OK)
     public List<UserJubgingDataResponseDto> getJubgingData() { return this.userService.getJubgingData(); }
 
-    @GetMapping("/purchase_detail")
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<UserPurchaseDetailsResponseDto> getPurchaseDetails() {return this.userService.getPurchaseDetails(); }
+//    @GetMapping("/purchase_detail")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public List<UserPurchaseDetailsResponseDto> getPurchaseDetails() {return this.userService.getPurchaseDetails(); }
 }
 

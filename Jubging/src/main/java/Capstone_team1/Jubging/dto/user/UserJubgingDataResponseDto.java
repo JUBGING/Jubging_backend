@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 public class UserJubgingDataResponseDto {
     private LocalDateTime createDate;
     private Integer step_cnt;
-    private Integer distance;
+    private Float distance;
     private Time time;
     private Float weight;
     private String img_url;
 
-    private UserJubgingDataResponseDto(LocalDateTime createDate, Integer step_cnt, Integer distance, Time time, Float weight, String img_url) {
+    private UserJubgingDataResponseDto(LocalDateTime createDate, Integer step_cnt, Float distance, Time time, Float weight, String img_url) {
         this.createDate = createDate;
         this.step_cnt = step_cnt;
         this.distance = distance;

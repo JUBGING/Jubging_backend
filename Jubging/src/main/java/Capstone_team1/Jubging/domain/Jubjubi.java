@@ -18,27 +18,36 @@ public class Jubjubi extends BaseTimeEntity {
     @Id
     @Column(name = "jubjubi_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @Column(name = "name", nullable = false, columnDefinition = "varchar(20)")
     private String name;
 
     @Column(name = "weight", nullable = false)
-    private float weight;
+    private Float weight;
+
+    @Column(name = "tongs_unlock_key", nullable = false)
+    private String tongs_unlock_key;
 
     @Column(name = "tongs_cnt", nullable = false)
-    private int tongs_cnt;
+    private Integer tongs_cnt;
 
     @Column(name = "plastic_bag_cnt", nullable = false)
-    private int plastic_bag_cnt;
+    private Integer plastic_bag_cnt;
 
     @Column(name = "lat", nullable = false)
-    private float lat;
+    private Float lat;
 
     @Column(name = "lng", nullable = false)
-    private float lng;
+    private Float lng;
 
     @Column(name = "status", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private String status;
+
+    public Jubjubi serve(){
+        if(this.plastic_bag_cnt > 0) this.plastic_bag_cnt -= 1;
+        if(this.tongs_cnt > 0) this.tongs_cnt -= 1;
+        return this;
+    }
 
 }

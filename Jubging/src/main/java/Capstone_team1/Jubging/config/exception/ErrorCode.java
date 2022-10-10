@@ -34,7 +34,8 @@ public enum ErrorCode {
      * 404 Not Found
      */
     NOT_FOUND_USER(4040),
-
+    NOT_FOUND_TONG(4041),
+    NOT_FOUND_JUBJUBI(4042),
     /**
      * 409 CONFLICT
      */
