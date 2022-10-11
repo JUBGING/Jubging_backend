@@ -4,6 +4,7 @@ import Capstone_team1.Jubging.dto.user.FindUserInfoDto;
 import Capstone_team1.Jubging.dto.user.UserJubgingDataResponseDto;
 import Capstone_team1.Jubging.dto.user.UserMyInfoUpdateRequestDto;
 import Capstone_team1.Jubging.dto.user.UserMyInfoUpdateResponseDto;
+import Capstone_team1.Jubging.dto.user.UserPurchaseDetailsResponseDto;
 import Capstone_team1.Jubging.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,9 @@ public class UserController {
     @ResponseStatus(value = HttpStatus.OK)
     public List<UserJubgingDataResponseDto> getJubgingData() { return this.userService.getJubgingData(); }
 
-//    @GetMapping("/purchase_detail")
-//    @ResponseStatus(value = HttpStatus.OK)
-//    public List<UserPurchaseDetailsResponseDto> getPurchaseDetails() {return this.userService.getPurchaseDetails(); }
+    @GetMapping("/purchase_detail")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<UserPurchaseDetailsResponseDto> getPurchaseDetails() {return this.userService.getPurchaseDetails(); }
 }
+
 

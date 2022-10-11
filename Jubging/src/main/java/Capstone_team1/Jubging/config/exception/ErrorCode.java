@@ -25,6 +25,7 @@ public enum ErrorCode {
     INVALID_SIGNIN(4015),
     INVALID_REFRESH_JWT(4016),
     LEAVE_USER(4017),
+    INVALID_REQUEST_ORDERSTATUS(4018),
     /**
      * 403 Forbidden
      */

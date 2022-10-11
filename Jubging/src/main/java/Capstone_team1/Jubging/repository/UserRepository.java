@@ -5,6 +5,7 @@ import Capstone_team1.Jubging.config.exception.ErrorCode;
 import Capstone_team1.Jubging.domain.User;
 import Capstone_team1.Jubging.dto.user.FindUserInfoDto;
 import Capstone_team1.Jubging.dto.user.UserMyInfoUpdateResponseDto;
+import Capstone_team1.Jubging.dto.user.UserPurchaseDetailsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -69,4 +70,6 @@ public class UserRepository {
     {
         return this.jpaUserRepository.findUserInfo(email);
     }
+
+    public List<UserPurchaseDetailsResponseDto> findOrderInfo(String email) {return this.jpaUserRepository.findOrderInfo(email);}
 }

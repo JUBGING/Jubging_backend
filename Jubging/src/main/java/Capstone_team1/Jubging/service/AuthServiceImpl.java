@@ -7,7 +7,7 @@ import Capstone_team1.Jubging.config.exception.NotFoundException;
 import Capstone_team1.Jubging.config.exception.UnauthorizedException;
 import Capstone_team1.Jubging.config.jwt.JwtTokenProvider;
 import Capstone_team1.Jubging.config.utils.SecurityUtil;
-import Capstone_team1.Jubging.config.validation.EnumTypeCorrectValidator;
+import Capstone_team1.Jubging.config.validation.EnumUserStateTypeCorrectValidator;
 import Capstone_team1.Jubging.config.validation.PasswordCorrectValidator;
 import Capstone_team1.Jubging.config.validation.UserStateValidator;
 import Capstone_team1.Jubging.config.validation.ValidatorBucket;
@@ -209,7 +209,7 @@ public class AuthServiceImpl implements AuthService{
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
 
         ValidatorBucket.of()
-                .consistOf(EnumTypeCorrectValidator.of(userStatusChangeRequestDto.getStatus()))
+                .consistOf(EnumUserStateTypeCorrectValidator.of(userStatusChangeRequestDto.getStatus()))
                 .validate();
 
 

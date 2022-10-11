@@ -3,18 +3,17 @@ package Capstone_team1.Jubging.config.validation;
 import Capstone_team1.Jubging.config.exception.BadRequestException;
 import Capstone_team1.Jubging.config.exception.ErrorCode;
 import Capstone_team1.Jubging.domain.model.UserState;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class EnumTypeCorrectValidator extends AbstractValidator{
+public class EnumUserStateTypeCorrectValidator extends AbstractValidator{
 
     private final String status;
 
-    public EnumTypeCorrectValidator(String status) {
+    public EnumUserStateTypeCorrectValidator(String status) {
         this.status = status;
     }
 
-    public static EnumTypeCorrectValidator of(String status) {
-        return new EnumTypeCorrectValidator(status);
+    public static EnumUserStateTypeCorrectValidator of(String status) {
+        return new EnumUserStateTypeCorrectValidator(status);
     }
 
     @Override
