@@ -12,7 +12,7 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(4002),
     DUPLICATE_EMAIL(4003),
     INCORRECT_STATUS(4004),
-
+    ALREADY_OCCUPIED_TONG(4005),
     /**
      * 401 Unauthorized
      */

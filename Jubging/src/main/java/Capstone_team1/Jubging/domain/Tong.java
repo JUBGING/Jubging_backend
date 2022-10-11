@@ -25,11 +25,9 @@ public class Tong extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "tongs_id")
     private Integer tongs_id;
-
     @Column(name = "status",length = 10)
     @Enumerated(EnumType.STRING)
     private TongStatus status;
-
     public Tong updateStatus(TongStatus status){
         this.status = status;
         return this;

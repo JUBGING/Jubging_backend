@@ -3,6 +3,9 @@ package Capstone_team1.Jubging.service;
 import Capstone_team1.Jubging.config.exception.ErrorCode;
 import Capstone_team1.Jubging.config.exception.NotFoundException;
 import Capstone_team1.Jubging.config.utils.SecurityUtil;
+import Capstone_team1.Jubging.config.validation.TongStatusValidator;
+import Capstone_team1.Jubging.config.validation.UserStateValidator;
+import Capstone_team1.Jubging.config.validation.ValidatorBucket;
 import Capstone_team1.Jubging.domain.JubgingData;
 import Capstone_team1.Jubging.domain.Jubjubi;
 import Capstone_team1.Jubging.domain.Tong;
@@ -50,25 +53,25 @@ public class JubjubiService {
         int tongs_id = startJubgingRequestDto.getTongs_id();
         int jubjubi_id = startJubgingRequestDto.getJubjubi_id();
 
+        ValidatorBucket validatorBucket = ValidatorBucket.of();
         //로그인 유저 확인
-        Optional<User> user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
-        if(user.isEmpty()){
-            throw new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다.");
-        }
+        User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
         //집게id 확인
-        Optional<Tong> tong = tongRepository.findById(tongs_id);
-        if(tong.isEmpty()){
-            throw new NotFoundException(ErrorCode.NOT_FOUND_TONG, "집게 정보가 없습니다.");
-        }
-        //이미 사용중 인 경우 예외 처리
-        //OCCUPIED, UNOCCUPIED
+        Tong tong = tongRepository.findById(tongs_id)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_TONG, "집게 정보가 없습니다."));
+        //로그인 중인 유저 status 확인
+        validatorBucket
+                .consistOf(UserStateValidator.of(user.getState()))          //유저 status 확인
+                .consistOf(TongStatusValidator.of(tong.getStatus()));       //사용중인 집게인지 확인
 
+        validatorBucket.validate();
         //새로운 줍깅 데이터 생성
-        JubgingData newJubgingData = JubgingData.create(user.get(),tong.get());
+        JubgingData newJubgingData = JubgingData.create(user,tong);
         jubgingDataRepository.create(newJubgingData);
         //집게 테이블 status 변경
-        tong.get().updateStatus(OCCUPIED);
-        tongRepository.update(tong.get());
+        tong.updateStatus(OCCUPIED);
+        tongRepository.update(tong);
         //줍줍이 집게, 봉투 카운트 --
         Jubjubi currentJubjubi = jubjubiRepository.findById(jubjubi_id)
                 .map(Jubjubi::serve)
