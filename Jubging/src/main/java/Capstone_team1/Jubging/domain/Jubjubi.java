@@ -1,10 +1,13 @@
 package Capstone_team1.Jubging.domain;
 
+import Capstone_team1.Jubging.domain.model.JubjubiStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +45,8 @@ public class Jubjubi extends BaseTimeEntity {
     private Float lng;
 
     @Column(name = "status", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private JubjubiStatus status;
 
     public Jubjubi serve(){
         if(this.plastic_bag_cnt > 0) this.plastic_bag_cnt -= 1;

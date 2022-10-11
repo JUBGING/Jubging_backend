@@ -3,7 +3,9 @@ package Capstone_team1.Jubging.service;
 import Capstone_team1.Jubging.config.exception.ErrorCode;
 import Capstone_team1.Jubging.config.exception.NotFoundException;
 import Capstone_team1.Jubging.config.utils.SecurityUtil;
+import Capstone_team1.Jubging.config.validation.JubjubiStatusValidator;
 import Capstone_team1.Jubging.config.validation.TongStatusValidator;
+import Capstone_team1.Jubging.config.validation.UserPositionValidator;
 import Capstone_team1.Jubging.config.validation.UserStateValidator;
 import Capstone_team1.Jubging.config.validation.ValidatorBucket;
 import Capstone_team1.Jubging.domain.JubgingData;
@@ -36,6 +38,16 @@ public class JubjubiService {
     private final JubgingDataRepository jubgingDataRepository;
 
     public List<JubjubiResponseDto> findByUserPosition(String userPosition){
+        User currentUser = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
+
+        ValidatorBucket validatorBucket = ValidatorBucket.of();
+        validatorBucket
+                .consistOf(UserStateValidator.of(currentUser.getState()))
+                .consistOf(UserPositionValidator.of(userPosition));
+
+        validatorBucket.validate();
+
         String[] coord = userPosition.split(" ");
         String[] northWestLatLng = coord[0].split(",");
         String[] southEastLatLng = coord[1].split(",");
@@ -60,11 +72,15 @@ public class JubjubiService {
         //집게id 확인
         Tong tong = tongRepository.findById(tongs_id)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_TONG, "집게 정보가 없습니다."));
+        //줍줍이 id 확인 및 봉투, 집게 카운트 --
+        Jubjubi currentJubjubi = jubjubiRepository.findById(jubjubi_id)
+                .map(Jubjubi::serve)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_JUBJUBI, "줍줍이 정보가 없습니다."));
         //로그인 중인 유저 status 확인
         validatorBucket
                 .consistOf(UserStateValidator.of(user.getState()))          //유저 status 확인
-                .consistOf(TongStatusValidator.of(tong.getStatus()));       //사용중인 집게인지 확인
-
+                .consistOf(TongStatusValidator.of(tong.getStatus()))        //사용중인 집게인지 확인
+                .consistOf(JubjubiStatusValidator.of(currentJubjubi.getStatus()));
         validatorBucket.validate();
         //새로운 줍깅 데이터 생성
         JubgingData newJubgingData = JubgingData.create(user,tong);
@@ -72,10 +88,7 @@ public class JubjubiService {
         //집게 테이블 status 변경
         tong.updateStatus(OCCUPIED);
         tongRepository.update(tong);
-        //줍줍이 집게, 봉투 카운트 --
-        Jubjubi currentJubjubi = jubjubiRepository.findById(jubjubi_id)
-                .map(Jubjubi::serve)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_JUBJUBI, "줍줍이 정보가 없습니다."));
+        //줍줍이 변경 내용 저장
         jubjubiRepository.save(currentJubjubi);
 
         return new StartJubgingResponseDto(currentJubjubi.getTongs_unlock_key());

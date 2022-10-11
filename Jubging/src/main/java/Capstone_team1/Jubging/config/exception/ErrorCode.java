@@ -13,6 +13,7 @@ public enum ErrorCode {
     DUPLICATE_EMAIL(4003),
     INCORRECT_STATUS(4004),
     ALREADY_OCCUPIED_TONG(4005),
+    UNAVAILABLE_JUBJUBI(4006),
     /**
      * 401 Unauthorized
      */
