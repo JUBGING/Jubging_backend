@@ -38,6 +38,7 @@ public enum ErrorCode {
     NOT_FOUND_USER(4040),
     NOT_FOUND_TONG(4041),
     NOT_FOUND_JUBJUBI(4042),
+    NOT_FOUND_JUBGING_DATA(4043),
     /**
      * 409 CONFLICT
      */

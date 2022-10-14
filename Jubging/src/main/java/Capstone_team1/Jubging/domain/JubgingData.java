@@ -1,5 +1,6 @@
 package Capstone_team1.Jubging.domain;
 
+import Capstone_team1.Jubging.domain.model.JubgingDataStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -65,6 +68,11 @@ public class JubgingData extends BaseTimeEntity{
     @ColumnDefault("0")
     private Boolean tongs_return;
 
+    @Column(name = "status", nullable = false)
+    @ColumnDefault("'INPROGRESS'")
+    @Enumerated(EnumType.STRING)
+    private JubgingDataStatus status;
+
     public static JubgingData create(User user, Tong tong){
         JubgingData jubgingData = new JubgingData();
         jubgingData.setUser(user);
@@ -72,14 +80,15 @@ public class JubgingData extends BaseTimeEntity{
         return jubgingData;
     }
 
-    public JubgingData update(int stepCnt, float distance, int calorie, String imgUrl, User user, Tong tong, boolean tongs_return){
+    public JubgingData update(float weight, int stepCnt, float distance, int calorie, User user, Tong tong, boolean tongs_return, JubgingDataStatus status){
+        this.weight = weight;
         this.stepCnt = stepCnt;
         this.distance = distance;
         this.calorie = calorie;
-        this.imgUrl = imgUrl;
         this.user = user;
         this.tong = tong;
         this.tongs_return = tongs_return;
+        this.status = status;
         return this;
     }
 

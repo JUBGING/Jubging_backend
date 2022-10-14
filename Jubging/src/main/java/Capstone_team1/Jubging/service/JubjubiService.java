@@ -12,11 +12,13 @@ import Capstone_team1.Jubging.domain.JubgingData;
 import Capstone_team1.Jubging.domain.Jubjubi;
 import Capstone_team1.Jubging.domain.Tong;
 import Capstone_team1.Jubging.domain.User;
+import Capstone_team1.Jubging.domain.model.JubgingDataStatus;
+import Capstone_team1.Jubging.dto.jubjubi.EndJubgingResponseDto;
 import Capstone_team1.Jubging.dto.jubjubi.JubjubiResponseDto;
+import Capstone_team1.Jubging.dto.jubjubi.EndJubgingRequestDto;
 import Capstone_team1.Jubging.dto.jubjubi.StartJubgingRequestDto;
 import Capstone_team1.Jubging.dto.jubjubi.StartJubgingResponseDto;
 import Capstone_team1.Jubging.repository.JpaJubjubiRepository;
-import Capstone_team1.Jubging.repository.JpaTongRepository;
 import Capstone_team1.Jubging.repository.JubgingDataRepository;
 import Capstone_team1.Jubging.repository.TongRepository;
 import Capstone_team1.Jubging.repository.UserRepository;
@@ -25,9 +27,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
+import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.FINISHED;
+import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.INPROGRESS;
 import static Capstone_team1.Jubging.domain.model.TongStatus.OCCUPIED;
+import static Capstone_team1.Jubging.domain.model.TongStatus.UNOCCUPIED;
 
 @AllArgsConstructor
 @Service
@@ -92,5 +96,44 @@ public class JubjubiService {
         jubjubiRepository.save(currentJubjubi);
 
         return new StartJubgingResponseDto(currentJubjubi.getTongs_unlock_key());
+    }
+
+    @Transactional
+    public EndJubgingResponseDto endJubging(EndJubgingRequestDto endJubgingRequestDto) {
+        int tongs_id = endJubgingRequestDto.getTongs_id();
+        int jubjubi_id = endJubgingRequestDto.getJubjubi_id();
+
+        ValidatorBucket validatorBucket = ValidatorBucket.of();
+
+        //로그인 유저 확인
+        User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
+
+        Tong tong = tongRepository.findById(tongs_id)
+               .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_TONG, "집게 정보가 없습니다."));
+
+        Jubjubi jubjubi = jubjubiRepository.findById(jubjubi_id)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_JUBJUBI, "줍줍이 정보가 없습니다."));
+
+        JubgingData jubgingData = jubgingDataRepository.findJubgingDataInProgress(user.getId(), INPROGRESS)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_JUBGING_DATA, "진행 중인 줍깅 정보가 없습니다."));
+
+        //집게 테이블에 반환 정보 update
+        tong.updateStatus(UNOCCUPIED);
+        tongRepository.update(tong);
+
+        //줍깅데이타 테이블에 반환 정보 update
+        jubgingData.update(
+                endJubgingRequestDto.getWeight(),
+                endJubgingRequestDto.getStep_cnt(),
+                endJubgingRequestDto.getDistance(),
+                endJubgingRequestDto.getCalorie(),
+                user,
+                tong,
+                endJubgingRequestDto.isTongs_return(),
+                FINISHED);
+        jubgingDataRepository.create(jubgingData);
+
+        return EndJubgingResponseDto.of(jubgingData);
     }
 }

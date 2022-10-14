@@ -21,4 +21,8 @@ public class TongRepository {
             }
         );
     }
+
+    public Tong getReferenceById(int id) {
+        return this.jpaTongRepository.getReferenceById(id);
+    }
 }
