@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface JpaJubjubiRepository extends JpaRepository<Jubjubi, Integer> {
@@ -19,5 +20,5 @@ public interface JpaJubjubiRepository extends JpaRepository<Jubjubi, Integer> {
             "and status='ACTIVE'", nativeQuery = true)
     List<JubjubiResponseDto> findByUserPosition(@Param("minLat") float minLat, @Param("minLng") float minLng, @Param("maxLat") float maxLat, @Param("maxLng") float maxLng);
 
-
+    Optional<Jubjubi> findById(String jubjubiId);
 }

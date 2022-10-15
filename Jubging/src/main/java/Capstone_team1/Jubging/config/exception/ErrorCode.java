@@ -12,7 +12,8 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(4002),
     DUPLICATE_EMAIL(4003),
     INCORRECT_STATUS(4004),
-
+    ALREADY_OCCUPIED_TONG(4005),
+    UNAVAILABLE_JUBJUBI(4006),
     /**
      * 401 Unauthorized
      */
@@ -37,7 +38,9 @@ public enum ErrorCode {
      * 404 Not Found
      */
     NOT_FOUND_USER(4040),
-
+    NOT_FOUND_TONG(4041),
+    NOT_FOUND_JUBJUBI(4042),
+    NOT_FOUND_JUBGING_DATA(4043),
     /**
      * 409 CONFLICT
      */

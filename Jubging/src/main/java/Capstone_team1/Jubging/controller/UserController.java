@@ -42,7 +42,6 @@ public class UserController {
     @GetMapping("/purchase_detail")
     @ResponseStatus(value = HttpStatus.OK)
     public List<UserPurchaseDetailsResponseDto> getPurchaseDetails() {return this.userService.getPurchaseDetails(); }
-
 }
 
 
