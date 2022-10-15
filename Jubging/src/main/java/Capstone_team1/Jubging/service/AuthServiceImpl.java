@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService{
     {
         User user = this.userRepository.findByEmail(userSignInRequestDto.getEmail()).orElseThrow(
                 () -> new UnauthorizedException(
-                        ErrorCode.INVALID_SIGNIN,
+                        ErrorCode.INVALID_EMAIL,
                         "잘못된 이메일 입니다."
                 )
         );

@@ -59,6 +59,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserPurchaseDetailsResponseDto> getPurchaseDetails(){
-       return this.userRepository.findOrderInfo(SecurityUtil.getCurrentUserEmail());
+        User findUser = this.userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
+
+        return this.userRepository.findOrderInfo(SecurityUtil.getCurrentUserEmail());
     }
 }

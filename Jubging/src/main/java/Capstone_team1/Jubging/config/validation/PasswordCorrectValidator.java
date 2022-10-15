@@ -25,7 +25,7 @@ public class PasswordCorrectValidator extends AbstractValidator {
     public void validate() {
         if (!passwordEncoder.matches(dstPassword, srcPassword)) {
             throw new UnauthorizedException(
-                    ErrorCode.INVALID_SIGNIN,
+                    ErrorCode.INVALID_PASSWORD,
                     "비밀번호를 잘못 입력했습니다."
             );
         }
