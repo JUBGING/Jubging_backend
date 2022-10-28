@@ -1,5 +1,6 @@
 package Capstone_team1.Jubging.controller;
 
+import Capstone_team1.Jubging.dto.MessageResponseDto;
 import Capstone_team1.Jubging.dto.auth.UserRequestSignUpDto;
 import Capstone_team1.Jubging.dto.auth.UserRequestUpdatePasswordDto;
 import Capstone_team1.Jubging.dto.auth.UserResponseDto;
@@ -10,7 +11,6 @@ import Capstone_team1.Jubging.dto.jwt.JwtTokenRequestLogoutDto;
 import Capstone_team1.Jubging.dto.jwt.JwtTokenRequestReissueDto;
 import Capstone_team1.Jubging.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +50,7 @@ public class AuthController {
     }
     @PostMapping("/logout")
     @ResponseStatus(value = HttpStatus.OK)
-    public String logout(@RequestBody @Validated JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto){
+    public MessageResponseDto logout(@RequestBody @Validated JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto){
         return this.authService.logout(jwtTokenRequestLogoutDto);
     }
     @PostMapping("/reissue")
@@ -61,7 +61,7 @@ public class AuthController {
 
     @PatchMapping("/status")
     @ResponseStatus(value = HttpStatus.OK)
-    public String statusChange(@RequestBody @Validated UserStatusChangeRequestDto userStatusChangeRequestDto){
+    public MessageResponseDto statusChange(@RequestBody @Validated UserStatusChangeRequestDto userStatusChangeRequestDto){
         return this.authService.statusChange(userStatusChangeRequestDto);
     }
 }

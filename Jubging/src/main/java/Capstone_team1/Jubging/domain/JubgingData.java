@@ -1,15 +1,18 @@
 package Capstone_team1.Jubging.domain;
 
 import Capstone_team1.Jubging.domain.model.JubgingDataStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -23,7 +26,8 @@ import java.sql.Time;
 @Setter
 @Entity
 @DynamicInsert
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(value = {AuditingEntityListener.class})
 @Table(name = "jubging_data")
 public class JubgingData extends BaseTimeEntity{
     @Id

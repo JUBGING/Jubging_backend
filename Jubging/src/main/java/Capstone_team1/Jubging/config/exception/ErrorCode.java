@@ -14,6 +14,8 @@ public enum ErrorCode {
     INCORRECT_STATUS(4004),
     ALREADY_OCCUPIED_TONG(4005),
     UNAVAILABLE_JUBJUBI(4006),
+    INVALID_PRODUCT_CNT(4007),
+    INVALID_PRODUCT_DELETE(4008),
     /**
      * 401 Unauthorized
      */
@@ -41,6 +43,7 @@ public enum ErrorCode {
     NOT_FOUND_TONG(4041),
     NOT_FOUND_JUBJUBI(4042),
     NOT_FOUND_JUBGING_DATA(4043),
+    NOT_FOUND_PRODUCTS(4044),
     /**
      * 409 CONFLICT
      */

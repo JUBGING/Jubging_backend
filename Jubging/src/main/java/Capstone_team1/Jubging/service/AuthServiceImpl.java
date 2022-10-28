@@ -15,6 +15,7 @@ import Capstone_team1.Jubging.domain.Points;
 import Capstone_team1.Jubging.domain.User;
 import Capstone_team1.Jubging.domain.model.Role;
 import Capstone_team1.Jubging.domain.model.UserState;
+import Capstone_team1.Jubging.dto.MessageResponseDto;
 import Capstone_team1.Jubging.dto.auth.UserRequestSignUpDto;
 import Capstone_team1.Jubging.dto.auth.UserRequestUpdatePasswordDto;
 import Capstone_team1.Jubging.dto.auth.UserResponseDto;
@@ -181,7 +182,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Transactional
     @Override
-    public String logout(JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto)
+    public MessageResponseDto logout(JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto)
     {
         // 1. Access Token 검증
         if (!jwtTokenProvider.validateToken(jwtTokenRequestLogoutDto.getAccessToken())) {
@@ -199,11 +200,11 @@ public class AuthServiceImpl implements AuthService{
         redisTemplate.opsForValue()
                 .set(jwtTokenRequestLogoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
-        return "로그아웃 되었습니다.";
+        return new MessageResponseDto("로그아웃 되었습니다.");
     }
     @Transactional
     @Override
-    public String statusChange(UserStatusChangeRequestDto userStatusChangeRequestDto)
+    public MessageResponseDto statusChange(UserStatusChangeRequestDto userStatusChangeRequestDto)
     {
         User findUser = this.userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
@@ -226,6 +227,6 @@ public class AuthServiceImpl implements AuthService{
                 .map(UserResponseDto::of)
                 .orElseThrow(()-> new ConflictException(ErrorCode.UPDATE_FAIL, "회원 status 업데이트를 실패했습니다."));
 
-        return "회원 상태가 변경되었습니다.";
+        return new MessageResponseDto("회원 상태가 변경되었습니다.");
     }
 }

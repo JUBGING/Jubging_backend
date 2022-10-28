@@ -4,8 +4,11 @@ import Capstone_team1.Jubging.domain.model.JubjubiStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -17,6 +20,7 @@ import javax.persistence.Table;
 @Table(name = "jubjubi")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(value = {AuditingEntityListener.class})
 public class Jubjubi extends BaseTimeEntity {
     @Id
     @Column(name = "jubjubi_id", nullable = false)

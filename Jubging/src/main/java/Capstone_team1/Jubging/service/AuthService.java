@@ -1,5 +1,6 @@
 package Capstone_team1.Jubging.service;
 
+import Capstone_team1.Jubging.dto.MessageResponseDto;
 import Capstone_team1.Jubging.dto.auth.UserRequestSignUpDto;
 import Capstone_team1.Jubging.dto.auth.UserRequestUpdatePasswordDto;
 import Capstone_team1.Jubging.dto.auth.UserResponseDto;
@@ -17,7 +18,7 @@ public interface AuthService {
 
     JwtTokenDto reissue(JwtTokenRequestReissueDto jwtTokenRequestDto);
 
-    String logout(JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto);
+    MessageResponseDto logout(JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto);
 
-    String statusChange(UserStatusChangeRequestDto userStatusChangeRequestDto);
+    MessageResponseDto statusChange(UserStatusChangeRequestDto userStatusChangeRequestDto);
 }
