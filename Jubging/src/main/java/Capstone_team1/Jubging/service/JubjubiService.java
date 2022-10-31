@@ -1,5 +1,6 @@
 package Capstone_team1.Jubging.service;
 
+import Capstone_team1.Jubging.config.exception.BaseRuntimeException;
 import Capstone_team1.Jubging.config.exception.ErrorCode;
 import Capstone_team1.Jubging.config.exception.NotFoundException;
 import Capstone_team1.Jubging.config.utils.SecurityUtil;
@@ -13,11 +14,7 @@ import Capstone_team1.Jubging.domain.Jubjubi;
 import Capstone_team1.Jubging.domain.Tong;
 import Capstone_team1.Jubging.domain.User;
 import Capstone_team1.Jubging.domain.model.JubgingDataStatus;
-import Capstone_team1.Jubging.dto.jubjubi.EndJubgingResponseDto;
-import Capstone_team1.Jubging.dto.jubjubi.JubjubiResponseDto;
-import Capstone_team1.Jubging.dto.jubjubi.EndJubgingRequestDto;
-import Capstone_team1.Jubging.dto.jubjubi.StartJubgingRequestDto;
-import Capstone_team1.Jubging.dto.jubjubi.StartJubgingResponseDto;
+import Capstone_team1.Jubging.dto.jubjubi.*;
 import Capstone_team1.Jubging.repository.JpaJubjubiRepository;
 import Capstone_team1.Jubging.repository.JubgingDataRepository;
 import Capstone_team1.Jubging.repository.TongRepository;
@@ -25,7 +22,9 @@ import Capstone_team1.Jubging.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.FINISHED;
@@ -40,6 +39,7 @@ public class JubjubiService {
     private final UserRepository userRepository;
     private final TongRepository tongRepository;
     private final JubgingDataRepository jubgingDataRepository;
+    private final S3Service s3Service;
 
     public List<JubjubiResponseDto> findByUserPosition(String userPosition){
         User currentUser = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
@@ -135,5 +135,24 @@ public class JubjubiService {
         jubgingDataRepository.create(jubgingData);
 
         return EndJubgingResponseDto.of(jubgingData);
+    }
+
+    public SendImageResponseDto sendImage(MultipartFile image){
+        User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
+        String userEmail = user.getEmail();
+        String url;
+        //사진 s3에 저장
+        url = s3Service.uploadFile(image, userEmail);
+
+        //url db에
+        JubgingData jubgingData = jubgingDataRepository.findJubgingDataInProgress(user.getId(), FINISHED)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_JUBGING_DATA, "진행 중인 줍깅 정보가 없습니다."));
+
+        jubgingData.updateImage(url);
+        jubgingDataRepository.create(jubgingData);
+
+
+        return new SendImageResponseDto(url);
     }
 }
