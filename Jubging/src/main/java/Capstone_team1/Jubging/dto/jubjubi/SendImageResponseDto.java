@@ -1,0 +1,12 @@
+package Capstone_team1.Jubging.dto.jubjubi;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class SendImageResponseDto {
+    private String url;
+}

@@ -50,6 +50,7 @@ public enum ErrorCode {
      */
     INTERNAL_SERVER(5000),
     PARSING_ERROR(5001),
+    IMAGE_CONVERT_ERROR(5002),
 
     /**
      * 503 Service Unavailable Error
