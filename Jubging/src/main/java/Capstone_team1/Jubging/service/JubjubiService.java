@@ -146,6 +146,12 @@ public class JubjubiService {
         url = s3Service.uploadFile(image, userEmail);
 
         //url db에
+        JubgingData jubgingData = jubgingDataRepository.findJubgingDataInProgress(user.getId(), FINISHED)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_JUBGING_DATA, "진행 중인 줍깅 정보가 없습니다."));
+
+        jubgingData.updateImage(url);
+        jubgingDataRepository.create(jubgingData);
+
 
         return new SendImageResponseDto(url);
     }

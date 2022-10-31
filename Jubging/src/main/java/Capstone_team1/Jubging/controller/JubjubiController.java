@@ -52,6 +52,5 @@ public class JubjubiController {
     @ResponseStatus(value = HttpStatus.OK)
     public SendImageResponseDto sendImage(@RequestBody MultipartFile image){
         return jubJubiService.sendImage(image);
-
     }
 }

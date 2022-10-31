@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum JubgingDataStatus {
 
     INPROGRESS("INPROGRESS"),
-    FINISHED("FINISHED");
+    FINISHED("FINISHED"),
+    DONE("DONE");
 
     private final String value;
 
