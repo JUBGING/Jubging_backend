@@ -20,9 +20,9 @@ public interface JpaUserRepository extends JpaRepository<User, String> {
     boolean existsByEmail(String email);
 
     @Query(nativeQuery = true, value =
-            "SELECT users.email, users.name, SUM(jubging_data.step_cnt), SUM(jubging_data.distance), SUM(jubging_data.calorie), points.total_points" +
-                    " FROM users LEFT OUTER JOIN points ON users.user_id = points.id" +
-                    " LEFT OUTER JOIN jubging_data ON users.user_id = jubging_data.id" +
+            "SELECT users.email, users.name, COALESCE( SUM(jubging_data.step_cnt), 0 ) as stepSum, COALESCE(SUM(jubging_data.distance),0) as distanceSum, COALESCE(SUM(jubging_data.calorie),0) as calorieSum, points.total_points as totalPoints " +
+                    " FROM users LEFT OUTER JOIN points ON users.point_id = points.id" +
+                    " LEFT OUTER JOIN jubging_data ON users.user_id = jubging_data.user_id" +
                     " WHERE users.email = ?1" +
                     " GROUP BY users.email")
     Optional<FindUserInfoDto> findUserInfo(String email);
