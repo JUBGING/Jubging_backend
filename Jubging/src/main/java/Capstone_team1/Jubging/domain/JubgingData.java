@@ -56,7 +56,7 @@ public class JubgingData extends BaseTimeEntity{
     @ColumnDefault("0.00")
     private Float weight;
 
-    @Column(name = "img_url", length = 60, nullable = false)
+    @Column(name = "img_url", length = 200, nullable = false)
     @ColumnDefault("'/default/imgUrl'")
     private String imgUrl;
 
@@ -93,6 +93,11 @@ public class JubgingData extends BaseTimeEntity{
         this.tong = tong;
         this.tongs_return = tongs_return;
         this.status = status;
+        return this;
+    }
+
+    public JubgingData updateImage(String imgUrl){
+        this.imgUrl = imgUrl;
         return this;
     }
 

@@ -1,10 +1,12 @@
 package Capstone_team1.Jubging.controller;
 
-import Capstone_team1.Jubging.dto.jubjubi.EndJubgingRequestDto;
-import Capstone_team1.Jubging.dto.jubjubi.EndJubgingResponseDto;
-import Capstone_team1.Jubging.dto.jubjubi.JubjubiResponseDto;
-import Capstone_team1.Jubging.dto.jubjubi.StartJubgingRequestDto;
-import Capstone_team1.Jubging.dto.jubjubi.StartJubgingResponseDto;
+import Capstone_team1.Jubging.config.exception.ErrorCode;
+import Capstone_team1.Jubging.config.exception.NotFoundException;
+import Capstone_team1.Jubging.config.utils.SecurityUtil;
+import Capstone_team1.Jubging.domain.User;
+import Capstone_team1.Jubging.dto.jubjubi.*;
+import Capstone_team1.Jubging.service.S3Service;
+import Capstone_team1.Jubging.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import Capstone_team1.Jubging.service.JubjubiService;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,6 +28,8 @@ import java.util.List;
 public class JubjubiController {
 
     private final JubjubiService jubJubiService;
+    private final UserService userService;
+    private final S3Service s3Service;
 
     @GetMapping("/info/{userPosition}")
     @ResponseStatus(value = HttpStatus.OK)
@@ -40,5 +46,11 @@ public class JubjubiController {
     @ResponseStatus(value = HttpStatus.OK)
     public EndJubgingResponseDto endJubging(@RequestBody EndJubgingRequestDto endJubgingRequestDto){
         return jubJubiService.endJubging(endJubgingRequestDto);
+    }
+
+    @PatchMapping("/jubjubi/jubging-data/img")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SendImageResponseDto sendImage(@RequestBody MultipartFile image){
+        return jubJubiService.sendImage(image);
     }
 }
