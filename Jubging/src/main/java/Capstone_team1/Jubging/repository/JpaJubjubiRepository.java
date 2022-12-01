@@ -13,12 +13,12 @@ import java.util.Optional;
 @Repository
 public interface JpaJubjubiRepository extends JpaRepository<Jubjubi, Integer> {
 
-    @Query(value = "select name, lat, lng, tongs_cnt, plastic_bag_cnt " +
+    @Query(value = "select jubjubi_id, name, lat, lng, tongs_cnt, plastic_bag_cnt " +
             "from jubjubi " +
             "where lat >= :minLat and lat <= :maxLat " +
             "and lng >= :minLng and lng <= :maxLng " +
             "and status='ACTIVE'", nativeQuery = true)
-    List<JubjubiResponseDto> findByUserPosition(@Param("minLat") float minLat, @Param("minLng") float minLng, @Param("maxLat") float maxLat, @Param("maxLng") float maxLng);
+    List<JubjubiResponseDto> findByUserPosition(@Param("minLat") double minLat, @Param("minLng") double minLng, @Param("maxLat") double maxLat, @Param("maxLng") double maxLng);
 
     Optional<Jubjubi> findById(String jubjubiId);
 }
