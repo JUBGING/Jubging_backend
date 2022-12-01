@@ -7,7 +7,7 @@ public interface FindUserInfoDto {
 
     Integer getStepSum();
 
-    Integer getDistanceSum();
+    Float getDistanceSum();
 
     Integer getCalorieSum();
 
