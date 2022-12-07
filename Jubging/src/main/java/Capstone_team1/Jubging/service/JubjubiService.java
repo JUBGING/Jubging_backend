@@ -137,7 +137,8 @@ public class JubjubiService {
         return EndJubgingResponseDto.of(jubgingData);
     }
 
-    public SendImageResponseDto sendImage(SendImageRequestDto sendImageRequestDto){
+    public SendImageResponseDto sendImage(MultipartFile image, String weight){
+
         User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
         String userEmail = user.getEmail();
@@ -146,8 +147,8 @@ public class JubjubiService {
         String filePath;
         try {
 
-            float weightG = Float.parseFloat(sendImageRequestDto.getWeight())*1000;
-            if( (weightG / flaskApiService.requestToFlask("image", sendImageRequestDto.getImage()).getCount()) > 150.0f) {
+            float weightG = Float.parseFloat(weight)*1000;
+            if( (weightG / flaskApiService.requestToFlask("image", image).getCount()) > 150.0f) {
                 filePath = userEmail + "/" + "doubt";
             }
             else {
@@ -158,7 +159,7 @@ public class JubjubiService {
         }
 
         //사진 s3에 저장
-        url = s3Service.uploadFile(sendImageRequestDto.getImage(), filePath);
+        url = s3Service.uploadFile(image, filePath);
 
         //url db에
         JubgingData jubgingData = jubgingDataRepository.findJubgingDataInProgress(user.getId(), INPROGRESS)
