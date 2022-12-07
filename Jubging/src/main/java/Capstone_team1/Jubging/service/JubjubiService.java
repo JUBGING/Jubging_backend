@@ -145,7 +145,8 @@ public class JubjubiService {
 
         String filePath;
         try {
-            float weightG = sendImageRequestDto.getWeight()*1000;
+
+            float weightG = Float.parseFloat(sendImageRequestDto.getWeight())*1000;
             if( (weightG / flaskApiService.requestToFlask("image", sendImageRequestDto.getImage()).getCount()) > 150.0f) {
                 filePath = userEmail + "/" + "doubt";
             }

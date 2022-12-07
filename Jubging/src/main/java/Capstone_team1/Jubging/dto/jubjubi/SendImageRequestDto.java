@@ -10,5 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class SendImageRequestDto {
     private MultipartFile image;
-    private Float weight;
+    private String weight;
 }
