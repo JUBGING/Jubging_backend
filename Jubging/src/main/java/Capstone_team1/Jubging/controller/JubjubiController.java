@@ -48,7 +48,7 @@ public class JubjubiController {
         return jubJubiService.endJubging(endJubgingRequestDto);
     }
 
-    @PatchMapping("/jubjubi/jubging-data/img")
+    @PostMapping("/jubging-data/img")
     @ResponseStatus(value = HttpStatus.OK)
     public SendImageResponseDto sendImage(@RequestBody MultipartFile image){
         return jubJubiService.sendImage(image);
