@@ -1,6 +1,5 @@
 package Capstone_team1.Jubging.service;
 
-import Capstone_team1.Jubging.config.exception.BaseRuntimeException;
 import Capstone_team1.Jubging.config.exception.ErrorCode;
 import Capstone_team1.Jubging.config.exception.NotFoundException;
 import Capstone_team1.Jubging.config.utils.SecurityUtil;
@@ -13,7 +12,6 @@ import Capstone_team1.Jubging.domain.JubgingData;
 import Capstone_team1.Jubging.domain.Jubjubi;
 import Capstone_team1.Jubging.domain.Tong;
 import Capstone_team1.Jubging.domain.User;
-import Capstone_team1.Jubging.domain.model.JubgingDataStatus;
 import Capstone_team1.Jubging.dto.jubjubi.*;
 import Capstone_team1.Jubging.repository.JpaJubjubiRepository;
 import Capstone_team1.Jubging.repository.JubgingDataRepository;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.FINISHED;
@@ -40,6 +37,8 @@ public class JubjubiService {
     private final TongRepository tongRepository;
     private final JubgingDataRepository jubgingDataRepository;
     private final S3Service s3Service;
+
+    private final FlaskApiService flaskApiService;
 
     public List<JubjubiResponseDto> findByUserPosition(String userPosition){
         User currentUser = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
@@ -138,13 +137,27 @@ public class JubjubiService {
         return EndJubgingResponseDto.of(jubgingData);
     }
 
-    public SendImageResponseDto sendImage(MultipartFile image){
+    public SendImageResponseDto sendImage(SendImageRequestDto sendImageRequestDto){
         User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
         String userEmail = user.getEmail();
         String url;
+
+        String filePath;
+        try {
+            float weightG = sendImageRequestDto.getWeight()*1000;
+            if( (weightG / flaskApiService.requestToFlask("image", sendImageRequestDto.getImage()).getCount()) > 150.0f) {
+                filePath = userEmail + "/" + "doubt";
+            }
+            else {
+                filePath = userEmail;
+            }
+        } catch (Exception e) {
+            filePath = userEmail;
+        }
+
         //사진 s3에 저장
-        url = s3Service.uploadFile(image, userEmail);
+        url = s3Service.uploadFile(sendImageRequestDto.getImage(), filePath);
 
         //url db에
         JubgingData jubgingData = jubgingDataRepository.findJubgingDataInProgress(user.getId(), INPROGRESS)
