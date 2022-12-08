@@ -149,7 +149,8 @@ public class JubjubiService {
         Points userPoints = user.getPoints();
         float weightG = Float.parseFloat(weight)*1000;
         userPoints.setCurrent_points(userPoints.getCurrent_points() + (int)(weightG*10));
-
+        userPoints.setTotal_points(userPoints.getTotal_points()+ (int)(weightG*10));
+        userRepository.update(user);
         String filePath;
         try {
 
