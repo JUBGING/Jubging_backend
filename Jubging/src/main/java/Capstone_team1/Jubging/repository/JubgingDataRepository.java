@@ -13,8 +13,23 @@ public class JubgingDataRepository {
 
     private final JpaJubgingDataRepository jpaJubgingDataRepository;
 
-    public JubgingData create(JubgingData jubgingData){return this.jpaJubgingDataRepository.save(jubgingData);}
+    public JubgingData create(JubgingData jubgingData)
+    {
+        Optional<JubgingData> findJubgingData = jpaJubgingDataRepository.findById(jubgingData.getId());
+        findJubgingData.ifPresent(data -> jubgingData.setImgUrl(data.getImgUrl()));
+        return this.jpaJubgingDataRepository.save(jubgingData);
+    }
 
     public Optional<JubgingData> findJubgingDataInProgress(String id, JubgingDataStatus status){return this.jpaJubgingDataRepository.findByUser_idAndStatus(id,status);}
 
+    public JubgingData updateImage(JubgingData jubgingData)
+    {
+        Optional<JubgingData> findJubgingData = jpaJubgingDataRepository.findById(jubgingData.getId());
+        if(findJubgingData.isPresent())
+        {
+            findJubgingData.get().setImgUrl(jubgingData.getImgUrl());
+            return this.jpaJubgingDataRepository.save(findJubgingData.get());
+        }
+        return this.jpaJubgingDataRepository.save(jubgingData);
+    }
 }

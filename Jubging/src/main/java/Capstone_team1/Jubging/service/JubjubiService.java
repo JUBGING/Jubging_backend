@@ -182,7 +182,7 @@ public class JubjubiService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_JUBGING_DATA, "진행 중인 줍깅 정보가 없습니다."));
 
         jubgingData.updateImage(url);
-        jubgingDataRepository.create(jubgingData);
+        jubgingDataRepository.updateImage(jubgingData);
 
 
         return new SendImageResponseDto(url);
