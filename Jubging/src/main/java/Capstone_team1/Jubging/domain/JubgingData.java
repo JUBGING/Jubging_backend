@@ -93,7 +93,7 @@ public class JubgingData extends BaseTimeEntity{
         this.tong = tong;
         this.tongs_return = tongs_return;
         this.status = status;
-        this.time = Time.valueOf(time);
+        this.time = Time.valueOf(time.trim());
         return this;
     }
 
