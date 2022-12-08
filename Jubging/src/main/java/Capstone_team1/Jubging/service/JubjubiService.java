@@ -150,7 +150,7 @@ public class JubjubiService {
         String url;
 
         float weightG = Float.parseFloat(weight)*1000;
-        
+
         Points points = pointsRepository.findById(user.getPoints().getId()).orElseThrow(
                 () -> new NotFoundException(ErrorCode.NOT_FOUND_POINT, "포인트 정보가 없습니다.")
         );
@@ -160,7 +160,7 @@ public class JubjubiService {
         String filePath;
         try {
 
-            if( (weightG / flaskApiService.requestToFlask("image", image).getCount()) > 150.0f) {
+            if( weightG  > 150.0f * flaskApiService.requestToFlask("image", image).getCount()) {
                 filePath = userEmail + "/" + "doubt";
             }
             else {
