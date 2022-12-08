@@ -124,7 +124,8 @@ public class JubjubiService {
         tongRepository.update(tong);
 
         //줍깅데이타 테이블에 반환 정보 update
-        jubgingData.update(
+        jubgingData.
+                update(
                 endJubgingRequestDto.getWeight(),
                 endJubgingRequestDto.getStep_cnt(),
                 endJubgingRequestDto.getDistance(),
@@ -132,19 +133,20 @@ public class JubjubiService {
                 user,
                 tong,
                 endJubgingRequestDto.isTongs_return(),
-                FINISHED);
+                FINISHED,
+                endJubgingRequestDto.getTime());
         jubgingDataRepository.create(jubgingData);
 
         return EndJubgingResponseDto.of(jubgingData);
     }
 
-    public SendImageResponseDto sendImage(MultipartFile image){
+    public SendImageResponseDto sendImage(MultipartFile img){
         User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
         String userEmail = user.getEmail();
         String url;
         //사진 s3에 저장
-        url = s3Service.uploadFile(image, userEmail);
+        url = s3Service.uploadFile(img, userEmail);
 
         //url db에
         JubgingData jubgingData = jubgingDataRepository.findJubgingDataInProgress(user.getId(), INPROGRESS)
