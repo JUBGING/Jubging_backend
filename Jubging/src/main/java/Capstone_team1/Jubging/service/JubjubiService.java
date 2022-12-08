@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.FINISHED;
@@ -44,6 +45,8 @@ public class JubjubiService {
 
     private final PointsRepository pointsRepository;
     private final FlaskApiService flaskApiService;
+
+    private final EntityManager em;
 
     public List<JubjubiResponseDto> findByUserPosition(String userPosition){
         User currentUser = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
@@ -149,6 +152,7 @@ public class JubjubiService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
         String userEmail = user.getEmail();
         String url;
+        em.remove(user);
 
         float weightG = Float.parseFloat(weight)*1000;
 
