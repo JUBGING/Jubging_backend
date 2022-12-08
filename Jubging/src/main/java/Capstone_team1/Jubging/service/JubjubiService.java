@@ -138,8 +138,7 @@ public class JubjubiService {
                 user,
                 tong,
                 endJubgingRequestDto.isTongs_return(),
-                FINISHED,
-                endJubgingRequestDto.getTime());
+                FINISHED);
         jubgingDataRepository.create(jubgingData);
 
         return EndJubgingResponseDto.of(jubgingData);

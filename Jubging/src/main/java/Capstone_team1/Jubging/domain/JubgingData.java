@@ -84,7 +84,7 @@ public class JubgingData extends BaseTimeEntity{
         return jubgingData;
     }
 
-    public JubgingData update(float weight, int stepCnt, float distance, int calorie, User user, Tong tong, boolean tongs_return, JubgingDataStatus status, String time){
+    public JubgingData update(float weight, int stepCnt, float distance, int calorie, User user, Tong tong, boolean tongs_return, JubgingDataStatus status){
         this.weight = weight;
         this.stepCnt = stepCnt;
         this.distance = distance;
@@ -93,7 +93,6 @@ public class JubgingData extends BaseTimeEntity{
         this.tong = tong;
         this.tongs_return = tongs_return;
         this.status = status;
-        this.time = Time.valueOf(time.trim());
         return this;
     }
 
