@@ -131,7 +131,8 @@ public class JubjubiService {
         tongRepository.update(tong);
 
         //줍깅데이타 테이블에 반환 정보 update
-        jubgingData.update(
+        jubgingData.
+                update(
                 endJubgingRequestDto.getWeight(),
                 endJubgingRequestDto.getStep_cnt(),
                 endJubgingRequestDto.getDistance(),
@@ -139,7 +140,8 @@ public class JubjubiService {
                 user,
                 tong,
                 endJubgingRequestDto.isTongs_return(),
-                FINISHED);
+                FINISHED,
+                endJubgingRequestDto.getTime());
         jubgingDataRepository.create(jubgingData);
 
         return EndJubgingResponseDto.of(jubgingData);

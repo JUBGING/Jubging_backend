@@ -45,7 +45,7 @@ public class JubgingData extends BaseTimeEntity{
     private Float distance;
 
     @Column(name = "time", nullable = false)
-    @ColumnDefault("'00:00:00'")
+    @ColumnDefault("'00:12:48'")
     private Time time;
 
     @Column(name = "calorie", nullable = false)
@@ -84,7 +84,7 @@ public class JubgingData extends BaseTimeEntity{
         return jubgingData;
     }
 
-    public JubgingData update(float weight, int stepCnt, float distance, int calorie, User user, Tong tong, boolean tongs_return, JubgingDataStatus status){
+    public JubgingData update(float weight, int stepCnt, float distance, int calorie, User user, Tong tong, boolean tongs_return, JubgingDataStatus status, String time){
         this.weight = weight;
         this.stepCnt = stepCnt;
         this.distance = distance;
@@ -93,6 +93,7 @@ public class JubgingData extends BaseTimeEntity{
         this.tong = tong;
         this.tongs_return = tongs_return;
         this.status = status;
+        this.time = Time.valueOf(time.trim());
         return this;
     }
 

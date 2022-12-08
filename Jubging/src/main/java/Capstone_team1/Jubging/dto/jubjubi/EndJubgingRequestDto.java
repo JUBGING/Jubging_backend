@@ -15,4 +15,5 @@ public class EndJubgingRequestDto {
     private float distance;
     private int step_cnt;
     private boolean tongs_return;
+    private String time;
 }
