@@ -16,6 +16,7 @@ import Capstone_team1.Jubging.domain.User;
 import Capstone_team1.Jubging.dto.jubjubi.*;
 import Capstone_team1.Jubging.repository.JpaJubjubiRepository;
 import Capstone_team1.Jubging.repository.JubgingDataRepository;
+import Capstone_team1.Jubging.repository.PointsRepository;
 import Capstone_team1.Jubging.repository.TongRepository;
 import Capstone_team1.Jubging.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.FINISHED;
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.INPROGRESS;
@@ -39,6 +41,7 @@ public class JubjubiService {
     private final JubgingDataRepository jubgingDataRepository;
     private final S3Service s3Service;
 
+    private final PointsRepository pointsRepository;
     private final FlaskApiService flaskApiService;
 
     public List<JubjubiResponseDto> findByUserPosition(String userPosition){
@@ -146,13 +149,14 @@ public class JubjubiService {
         String userEmail = user.getEmail();
         String url;
 
-        Points userPoints = user.getPoints();
         float weightG = Float.parseFloat(weight)*1000;
-        userPoints.setCurrent_points(userPoints.getCurrent_points() + (int)(weightG*10));
-        userPoints.setTotal_points(userPoints.getTotal_points()+ (int)(weightG*10));
-        user.setPoints(userPoints);
+        
+        Points points = pointsRepository.findById(user.getPoints().getId()).orElseThrow(
+                () -> new NotFoundException(ErrorCode.NOT_FOUND_POINT, "포인트 정보가 없습니다.")
+        );
+        points.setCurrent_points(points.getCurrent_points() + (int)(weightG*10));
+        points.setTotal_points(points.getTotal_points()+ (int)(weightG*10));
 
-        userRepository.update(user);
         String filePath;
         try {
 

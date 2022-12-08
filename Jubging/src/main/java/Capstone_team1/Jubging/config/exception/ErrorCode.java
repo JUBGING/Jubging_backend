@@ -44,6 +44,7 @@ public enum ErrorCode {
     NOT_FOUND_JUBJUBI(4042),
     NOT_FOUND_JUBGING_DATA(4043),
     NOT_FOUND_PRODUCTS(4044),
+    NOT_FOUND_POINT(4045),
     /**
      * 409 CONFLICT
      */
