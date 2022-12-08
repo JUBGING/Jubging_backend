@@ -46,8 +46,6 @@ public class JubjubiService {
     private final PointsRepository pointsRepository;
     private final FlaskApiService flaskApiService;
 
-    private final EntityManager em;
-
     public List<JubjubiResponseDto> findByUserPosition(String userPosition){
         User currentUser = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
@@ -152,7 +150,6 @@ public class JubjubiService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
         String userEmail = user.getEmail();
         String url;
-        em.remove(user);
 
         float weightG = Float.parseFloat(weight)*1000;
 
