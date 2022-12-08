@@ -10,6 +10,7 @@ import Capstone_team1.Jubging.config.validation.UserStateValidator;
 import Capstone_team1.Jubging.config.validation.ValidatorBucket;
 import Capstone_team1.Jubging.domain.JubgingData;
 import Capstone_team1.Jubging.domain.Jubjubi;
+import Capstone_team1.Jubging.domain.Points;
 import Capstone_team1.Jubging.domain.Tong;
 import Capstone_team1.Jubging.domain.User;
 import Capstone_team1.Jubging.dto.jubjubi.*;
@@ -137,6 +138,7 @@ public class JubjubiService {
         return EndJubgingResponseDto.of(jubgingData);
     }
 
+    @Transactional
     public SendImageResponseDto sendImage(MultipartFile image, String weight){
 
         User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
@@ -144,10 +146,13 @@ public class JubjubiService {
         String userEmail = user.getEmail();
         String url;
 
+        Points userPoints = user.getPoints();
+        float weightG = Float.parseFloat(weight)*1000;
+        userPoints.setCurrent_points(userPoints.getCurrent_points() + (int)(weightG*10));
+
         String filePath;
         try {
 
-            float weightG = Float.parseFloat(weight)*1000;
             if( (weightG / flaskApiService.requestToFlask("image", image).getCount()) > 150.0f) {
                 filePath = userEmail + "/" + "doubt";
             }
