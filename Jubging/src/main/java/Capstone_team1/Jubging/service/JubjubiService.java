@@ -20,12 +20,12 @@ import Capstone_team1.Jubging.repository.PointsRepository;
 import Capstone_team1.Jubging.repository.TongRepository;
 import Capstone_team1.Jubging.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.FINISHED;
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.INPROGRESS;
@@ -34,6 +34,7 @@ import static Capstone_team1.Jubging.domain.model.TongStatus.UNOCCUPIED;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class JubjubiService {
     private final JpaJubjubiRepository jubjubiRepository;
     private final UserRepository userRepository;
@@ -157,16 +158,18 @@ public class JubjubiService {
         points.setCurrent_points(points.getCurrent_points() + (int)(weightG*10));
         points.setTotal_points(points.getTotal_points()+ (int)(weightG*10));
 
-        String filePath;
+        String filePath="";
         try {
-
-            if( weightG  > 150.0f * flaskApiService.requestToFlask("image", image).getCount()) {
+            int cnt = flaskApiService.requestToFlask("image", image).getCount();
+            log.info("flaskAPI", cnt);
+            if( weightG  > 150.0f * cnt) {
                 filePath = userEmail + "/" + "doubt";
             }
             else {
                 filePath = userEmail;
             }
         } catch (Exception e) {
+            log.info("NO doubt");
             filePath = userEmail;
         }
 
