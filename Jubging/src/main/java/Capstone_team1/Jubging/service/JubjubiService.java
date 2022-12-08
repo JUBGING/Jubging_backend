@@ -21,11 +21,13 @@ import Capstone_team1.Jubging.repository.TongRepository;
 import Capstone_team1.Jubging.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import java.util.List;
 
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.FINISHED;
@@ -145,6 +147,7 @@ public class JubjubiService {
     }
 
     @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public SendImageResponseDto sendImage(MultipartFile image, String weight){
 
         User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())

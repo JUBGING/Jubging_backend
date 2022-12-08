@@ -13,7 +13,10 @@ public class JubgingDataRepository {
 
     private final JpaJubgingDataRepository jpaJubgingDataRepository;
 
-    public JubgingData create(JubgingData jubgingData){return this.jpaJubgingDataRepository.save(jubgingData);}
+    public JubgingData create(JubgingData jubgingData)
+    {
+        return this.jpaJubgingDataRepository.save(jubgingData);
+    }
 
     public Optional<JubgingData> findJubgingDataInProgress(String id, JubgingDataStatus status){return this.jpaJubgingDataRepository.findByUser_idAndStatus(id,status);}
 
