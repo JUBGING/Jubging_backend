@@ -1,6 +1,5 @@
 package Capstone_team1.Jubging.service;
 
-import Capstone_team1.Jubging.config.exception.BaseRuntimeException;
 import Capstone_team1.Jubging.config.exception.ErrorCode;
 import Capstone_team1.Jubging.config.exception.NotFoundException;
 import Capstone_team1.Jubging.config.utils.SecurityUtil;
@@ -11,20 +10,22 @@ import Capstone_team1.Jubging.config.validation.UserStateValidator;
 import Capstone_team1.Jubging.config.validation.ValidatorBucket;
 import Capstone_team1.Jubging.domain.JubgingData;
 import Capstone_team1.Jubging.domain.Jubjubi;
+import Capstone_team1.Jubging.domain.Points;
 import Capstone_team1.Jubging.domain.Tong;
 import Capstone_team1.Jubging.domain.User;
-import Capstone_team1.Jubging.domain.model.JubgingDataStatus;
 import Capstone_team1.Jubging.dto.jubjubi.*;
 import Capstone_team1.Jubging.repository.JpaJubjubiRepository;
 import Capstone_team1.Jubging.repository.JubgingDataRepository;
+import Capstone_team1.Jubging.repository.PointsRepository;
 import Capstone_team1.Jubging.repository.TongRepository;
 import Capstone_team1.Jubging.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static Capstone_team1.Jubging.domain.model.JubgingDataStatus.FINISHED;
@@ -34,12 +35,16 @@ import static Capstone_team1.Jubging.domain.model.TongStatus.UNOCCUPIED;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class JubjubiService {
     private final JpaJubjubiRepository jubjubiRepository;
     private final UserRepository userRepository;
     private final TongRepository tongRepository;
     private final JubgingDataRepository jubgingDataRepository;
     private final S3Service s3Service;
+
+    private final PointsRepository pointsRepository;
+    private final FlaskApiService flaskApiService;
 
     public List<JubjubiResponseDto> findByUserPosition(String userPosition){
         User currentUser = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
@@ -140,13 +145,39 @@ public class JubjubiService {
         return EndJubgingResponseDto.of(jubgingData);
     }
 
-    public SendImageResponseDto sendImage(MultipartFile img){
+    @Transactional
+    public SendImageResponseDto sendImage(MultipartFile image, String weight){
+
         User user = userRepository.findByEmail(SecurityUtil.getCurrentUserEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
         String userEmail = user.getEmail();
         String url;
+
+        float weightG = Float.parseFloat(weight)*1000;
+
+        Points points = pointsRepository.findById(user.getPoints().getId()).orElseThrow(
+                () -> new NotFoundException(ErrorCode.NOT_FOUND_POINT, "포인트 정보가 없습니다.")
+        );
+        points.setCurrent_points(points.getCurrent_points() + (int)(weightG*10));
+        points.setTotal_points(points.getTotal_points()+ (int)(weightG*10));
+
+        String filePath="";
+        try {
+            int cnt = flaskApiService.requestToFlask("image", image).getCount();
+            log.info("flaskAPI", cnt);
+            if( weightG  > 150.0f * cnt) {
+                filePath = userEmail + "/" + "doubt";
+            }
+            else {
+                filePath = userEmail;
+            }
+        } catch (Exception e) {
+            log.info("NO doubt");
+            filePath = userEmail;
+        }
+
         //사진 s3에 저장
-        url = s3Service.uploadFile(img, userEmail);
+        url = s3Service.uploadFile(image, filePath);
 
         //url db에
         JubgingData jubgingData = jubgingDataRepository.findJubgingDataInProgress(user.getId(), INPROGRESS)

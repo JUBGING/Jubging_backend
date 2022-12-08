@@ -1,15 +1,10 @@
 package Capstone_team1.Jubging.controller;
 
-import Capstone_team1.Jubging.config.exception.ErrorCode;
-import Capstone_team1.Jubging.config.exception.NotFoundException;
-import Capstone_team1.Jubging.config.utils.SecurityUtil;
-import Capstone_team1.Jubging.domain.User;
 import Capstone_team1.Jubging.dto.jubjubi.*;
-import Capstone_team1.Jubging.service.S3Service;
-import Capstone_team1.Jubging.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +23,6 @@ import java.util.List;
 public class JubjubiController {
 
     private final JubjubiService jubJubiService;
-    private final UserService userService;
-    private final S3Service s3Service;
 
     @GetMapping("/info/{userPosition}")
     @ResponseStatus(value = HttpStatus.OK)
@@ -50,7 +43,8 @@ public class JubjubiController {
 
     @PostMapping("/jubging-data/img")
     @ResponseStatus(value = HttpStatus.OK)
-    public SendImageResponseDto sendImage(@RequestBody MultipartFile image){
-        return jubJubiService.sendImage(image);
+    public SendImageResponseDto sendImage(@ModelAttribute("image") MultipartFile image,
+                                          @ModelAttribute("weight") String weight){
+        return jubJubiService.sendImage(image, weight);
     }
 }
